@@ -6,14 +6,14 @@
 class PSF
 {
 	private:
-		// Size of the PSF
-		int M, N;
+		// Size of the PSF (in square format)
+		int size;
 		std::vector< std::vector<double> > pixels;
 
 	public:
 		// Constructor inputs specify the size of the
-		// psf in pixels (vertical then horizontal)
-		PSF(int M, int N);
+		// psf in pixels
+		PSF(int size);
 
 		// Load from file (in centered format)
 		void load(const char* filename);

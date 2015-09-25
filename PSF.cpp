@@ -4,9 +4,9 @@
 
 using namespace std;
 
-PSF::PSF(int M, int N)
-:M(M), N(N)
-,pixels(M, vector<double>(N))
+PSF::PSF(int size)
+:size(size)
+,pixels(size, vector<double>(size))
 {
 
 }
@@ -14,12 +14,12 @@ PSF::PSF(int M, int N)
 void PSF::normalise()
 {
 	double tot = 0.;
-	for(int i=0; i<M; i++)
-		for(int j=0; j<N; j++)
+	for(int i=0; i<size; i++)
+		for(int j=0; j<size; j++)
 			tot += pixels[i][j];
 
-	for(int i=0; i<M; i++)
-		for(int j=0; j<N; j++)
+	for(int i=0; i<size; i++)
+		for(int j=0; j<size; j++)
 			pixels[i][j] /= tot;
 }
 
@@ -41,12 +41,18 @@ void PSF::load(const char* filename)
 
 	// Check the number of values read in vs the supposed size of this
 	// PSF
-	if(static_cast<int>(everything.size()) != M*N)
+	if(static_cast<int>(everything.size()) != size*size)
 	{
 		cerr<<"# Error: wrong number of elements in file ";
 		cerr<<filename<<"."<<endl;
-		cerr<<"# Expected "<<(M*N)<<", found "<<everything.size()<<"."<<endl;
+		cerr<<"# Expected "<<size<<", found "<<everything.size()<<"."<<endl;
 		return;
 	}
+
+	int k = 0;
+	for(int i=0; i<size; i++)
+		for(int j=0; j<size; j++)
+			pixels[i][j] = everything[k++];	
+	normalise();
 }
 
