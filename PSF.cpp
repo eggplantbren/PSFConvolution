@@ -56,3 +56,31 @@ void PSF::load(const char* filename)
 	normalise();
 }
 
+void PSF::calculate_shifted(int M, int N)
+{
+	// Resize 'shifted' to be M x N
+	shifted.assign(M, vector<double>(N, 0.));
+
+	// Indices within shifted
+	int m, n;
+	for(int i=0; i<size; i++)
+	{
+		m = mod(i - size/2, M);
+		for(int j=0; j<size; j++)
+		{
+			n = mod(j - size/2, N);
+			shifted[m][n] = pixels[i][j];
+		}
+	}
+}
+
+int PSF::mod(int y, int x)
+{
+	if(x <= 0)
+		cerr<<"# Warning in PSF::mod(int, int)"<<endl;
+	if(y >= 0)
+		return y - (y/x)*x;
+	else
+		return (x-1) - mod(-y-1, x);
+}
+
