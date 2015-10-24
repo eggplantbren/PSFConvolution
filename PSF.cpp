@@ -74,6 +74,23 @@ void PSF::calculate_shifted(int M, int N)
 	}
 }
 
+void PSF::calculate_fft()
+{
+	// Put shifted into a 1-D array
+	double* in = new double[shifted.size()*shifted[0].size()];
+	int k = 0;
+	for(size_t i=0; i<shifted.size(); i++)
+		for(size_t j=0; j<shifted[i].size(); j++)
+			in[k++] = shifted[i][j];
+
+	// Make a plan
+	fftw_plan plan = fftw_plan_dft_r2c_2d(shifted.size(), shifted[0].size(),
+											in, fft, FFTW_MEASURE);
+	fftw_execute(plan);
+
+	delete[] in;
+}
+
 int PSF::mod(int y, int x)
 {
 	if(x <= 0)

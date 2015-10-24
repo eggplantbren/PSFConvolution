@@ -2,6 +2,7 @@
 #define PSFConvolution_PSF_h
 
 #include <vector>
+#include <fftw3.h>
 
 class PSF
 {
@@ -14,6 +15,12 @@ class PSF
 		// 'fftshifted' to fill the corners
 		std::vector< std::vector<double> > shifted;
 
+		// The FFT of 'shifted'
+		fftw_complex* fft;
+
+		// Do the fft
+		void calculate_fft();
+
 		// Useful mod function
 		static int mod(int y, int x);
 
@@ -21,6 +28,10 @@ class PSF
 		// Constructor inputs specify the size of the
 		// psf in pixels
 		PSF(int size);
+
+		// Copy constructor and operator=
+		PSF(const PSF& other);
+		void operator = (const PSF& other);
 
 		// Load from file (in centered format)
 		void load(const char* filename);
